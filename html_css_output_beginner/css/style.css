@@ -33,13 +33,14 @@ header ul {
   width: 960px;
   padding: 0 4%;
   margin: 0 auto;
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr 1fr;
+  justify-content: center;
 }
 
 .self-introduction h2 {
-  display: inline-block;
   border-bottom: 1px solid #000;
+  text-align: center;
 }
 
 .self-introduction .name {
@@ -52,19 +53,19 @@ header ul {
 }
 
 /* プロフィール画像 */
-.profile-picture {
+.profile {
   width: 960px;
   margin: 0 auto;
   padding: 0 4%;
   justify-content: center;
 }
 
-.profile-picture h2 {
+.profile h2 {
   text-align: center;
 }
 
 .centerCardList {
-  width: 960px;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
