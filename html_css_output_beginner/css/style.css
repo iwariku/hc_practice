@@ -8,6 +8,7 @@ header {
 }
 
 header h3 {
+  font-size: 30px;
   background-color: #365759;
   color: #fff;
 }
@@ -29,9 +30,12 @@ header ul {
 }
 
 /* 自己紹介 */
+main {
+  text-align: center;
+}
+
 .self-introduction {
   width: 960px;
-  padding: 0 4%;
   margin: 0 auto;
   display: flex;
   grid-template-columns: 1fr 1fr;
@@ -43,42 +47,82 @@ header ul {
   text-align: center;
 }
 
-.self-introduction .name {
+.my_name {
   text-align: left;
+  font-weight: bold;
 }
 
-.self-introduction img {
+.icon_img {
   margin: auto 20px;
   border-radius: 150px;
 }
 
-/* プロフィール画像 */
-.profile {
+h2 {
+  text-align: center;
+  border-bottom: 1px solid #000;
+  display: inline-block;
+  align-items: center;
+}
+
+.container {
   width: 960px;
   margin: 0 auto;
-  padding: 0 4%;
-  justify-content: center;
-}
-
-.profile h2 {
-  text-align: center;
-}
-
-.centerCardList {
-  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
-  justify-content: center;
-  list-style: none;
+  gap: 10px;
 }
 
-.centerCardList {
+.container h3,
+.container p {
   text-align: center;
+}
+
+.item img {
+  width: 100%;
 }
 
 /* footer */
 footer {
   text-align: center;
+  padding-top: 50px;
   border-bottom: 1px solid #000;
+}
+
+@media screen and (max-width: 600px) {
+  /* body {
+    background-color: aqua;
+  } */
+  header nav ul {
+    justify-content: left;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
+
+  .my_name {
+    text-align: center;
+  }
+
+  .self-introduction {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 80px;
+  }
+
+  .icon_img {
+    width: 100px;
+    margin: 0 auto;
+  }
+
+  .container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  footer {
+    border-bottom: 10px solid #000;
+  }
 }
