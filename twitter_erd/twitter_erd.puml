@@ -1,1 +1,277 @@
+@startuml
+' ユーザーテーブル
+entity "users" as users {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  mail : VARCHAR(128) <<UNIQ>> <<NOT NULL>>
+  user_name : VARCHAR(255) <<UNIQ>> <<NOT NULL>>
+  phone_number : VARCHAR(255) <<UNIQ>> <<NOT NULL>>
+  nick_name : VARCHAR(255)
+  self_introduction : VARCHAR(255)
+  place : VARCHAR(255)
+  web_site : VARCHAR(255)
+  date_of_birth : DATE
+  profile_image : VARCHAR(255)
+  avatar_image : VARCHAR(255)
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' フォロー、フォロワーテーブル
+' 中間テーブル
+entity "follows" as follows {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  follower_id : INTEGER <<FK(users)>>
+  followed_id : INTEGER <<FK(users)>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' ツイートテーブル
+entity "tweets" as tweets {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  content : VARCHAR(140) <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' いいねテーブル
+entity "likes" as likes {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  tweet_id : INTEGER <<KF(tweets)>> <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' ブックマークテーブル
+entity "bookmarks" as bookmarks {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  user_id : INTEGER <<KF(users)>> <<NOT NULL>>
+  tweet_id : INTEGER <<KF(tweets)>> <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' リツイートテーブル
+entity "retweets" as retweets {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  tweet_id : INTEGER <<FK(tweets)>> <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+' 通知テーブル
+entity "notifications" as notifications {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  sender_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  recipient_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  tweet_id : INTEGER <<FK(tweets)>>
+  like_id : INTEGER <<FK(likes)>>
+  follow_id : INTEGER <<FK(follows)>>
+  action_name : VARCHAR(255) <<NOT NULL>>
+}
+
+' DMテーブル
+entity "directmessages" as directmessages {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  sender_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  recipient_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  message : TEXT <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
+  updated_at : DATETIME <<NOT NULL>>
+}
+
+'---------- 1対多 ----------
+'ユーザー1人というレコード 1対多 他のレコード
+' ツイート
+' フォロー、フォロワー、
+' DM
+' 通知
+' いいね
+' ブックマーク
+' リツイート
+
+'ツイート1つというレコード 1対多 他のレコード
+' いいね
+' ブックマーク
+' リツイート
+
+'---------- 1対1 ----------
+' 1いいねされたら、1通知
+' 1フォローされたら、1通知
+
+
+'ユーザー1人が、多数のツイートを持つ
+users ||--o{ tweets
+
+'ユーザー1人が、多数のDMを持つ
+users ||--o{ directmessages
+
+'ユーザー1人が、多数のフォロー、フォロワーを持つ
+users ||--o{ follows
+
+'ユーザー1人が、多数の通知を持つ
+users ||--o{ notifications
+
+'ユーザー1人が、多数のいいねアクションを持つ
+users ||--o{ likes
+
+'ユーザー1人が、多数のブックマークアクションを持つ
+users ||--o{ bookmarks
+
+'ユーザー1人が、多数のリツイートアクションを持つ
+users ||--o{ retweets
+
+'ツイート1つに対して、多数のいいねをもてる
+tweets ||--o{ likes
+
+'ツイート1つに対して、多数のブックマークをもてる
+tweets ||--o{ bookmarks
+
+'ツイート1つに対して、多数のリツイートをもてる
+tweets ||--o{ retweets
+
+' 1いいねされたら、1通知
+notifications ||--|| likes
+
+' 1フォローされたら、1通知
+notifications ||--|| follows
+@enduml
+
+'------------------------- 一回テーブル設計してみた ---------------
 ' PlantUMLを使う
+' 全体
+' users done
+' tweets done
+' retweet done
+' likes done
+' follows done
+' directmessage
+' notifications, 通知の情報にlikesとfollowsが必要
+' bookmark
+
+' マスター系
+' users
+' tweets
+
+' 関連系
+' likes
+' retweet
+' likes
+' follows
+
+' イベント系
+' notifications
+' user_id
+' tweet_id
+' いいね
+' リツイート
+' messages
+
+
+' マスター系
+
+' users
+' メールアドレス
+' 電話番号
+' ニックネーム
+' 自己紹介
+' 場所
+' ウェブサイト
+' 生年月日
+' プロフィール画像
+' アバター画像
+
+' entity "users" as users {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   email : VARCHAR <<UNIQ>> <<NOT NULL>>
+
+'   ' ユーザーはサインアップ後に以下の項目を登録するの部分
+'   user_name : VARCHAR <<UNIQ>> <<NOT NULL>>
+'   phone_number : INTEGER <<UNIQ>> <<NOT NULL>>
+'   nick_name : VARCHAR <<NOT NULL>>
+'   self_introduction : VARCHAR <<NOT NULL>>
+'   place : VARCHAR <<NOT NULL>>
+'   web_site : VARCHAR <<NOT NULL>>
+'   date_of_birth : VARCHAR <<NOT NULL>> 
+'   profile_image VARCHAR <<NOT NULL>>
+'   avatar_image : VARCHAR <<NOT NULL>
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' ' tweet
+' ' ツイートするユーザーid
+' ' ツイート内容140文字
+' entity "tweets" as tweets {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+'   content : VARCHAR(140) <<NOT NULL>>
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' ' 関連系
+
+' ' likes
+' ' いいねをタップするユーザーid
+' ' いいねするツイート
+' ' いいね数
+' entity "likes" as likes {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+'   tweet_id : INTEGER <<FK(tweets)>> <<NOT NULL>>
+'   like_count : INTEGER
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' ' retweets
+' ' リツイートするユーザーid
+' ' リツイートする元のツイート
+' ' リツイート数
+' entity "retweets" as retweets {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+'   tweet_id : INTEGER <<FK(tweet)>> <<NOT NULL>>
+'   retweet_count : INTEGER
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' ' follows
+' ' フォローする
+' ' フォロワー数
+' entity "follows" as follows {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+'   follower_count : INTEGER <<NOT NULL>>
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' ' DM
+' entity "directmessage" as directmessage {
+'   *id : INTEGER <<NOT NULL>>
+'   --
+'   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+'   created_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+'   updated_at : DATETIME <<NOT NULL>> <<NOT NULL>>
+' }
+
+' users ||--o{ tweets : "tweets"
