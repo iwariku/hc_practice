@@ -11,41 +11,53 @@ const allCountElement = document.getElementById("all-count");
 const completedCountElement = document.getElementById("completed-count");
 const incompleteCountElement = document.getElementById("incomplete-count");
 
-// --- 編集ボタンの作成 ---
+// --- 編集 ---
+const handleSaveEdit = (editInput, index) => {
+  const newText = editInput.value;
+  todoList[index].text = newText;
+  renderTodos();
+};
+
+const switchToEditModel = (e, index) => {
+  const listItem = e.target.parentElement;
+  listItem.innerHTML = "";
+
+  const editInput = document.createElement("input");
+  editInput.type = "text";
+  editInput.value = todoList[index].text;
+
+  const saveEditButton = document.createElement("button");
+  saveEditButton.textContent = "保存";
+
+  listItem.appendChild(editInput);
+  listItem.appendChild(saveEditButton);
+
+  saveEditButton.addEventListener("click", () => {
+    handleSaveEdit(editInput, index);
+  });
+};
+
 const createEditButton = (index) => {
   const editButton = document.createElement("button");
   editButton.textContent = "編集";
-
   // DOMにインデックスを記録する
   editButton.dataset.index = index;
 
   editButton.addEventListener("click", (e) => {
-    const listItem = e.target.parentElement;
-    listItem.innerHTML = "";
-
-    const editInput = document.createElement("input");
-    editInput.type = "text";
-    editInput.value = todoList[index].text;
-
-    const saveEditButton = document.createElement("button");
-    saveEditButton.textContent = "保存";
-
-    listItem.appendChild(editInput);
-    listItem.appendChild(saveEditButton);
-
-    // 編集状態で出現する保存ボタンのロジック。上書きという役割を与えるため
-    saveEditButton.addEventListener("click", () => {
-      const newText = editInput.value;
-
-      todoList[index].text = newText;
-
-      renderTodos();
-    });
+    switchToEditModel(e, index);
   });
   return editButton;
 };
 
-// --- 削除ボタンの作成 ---
+// --- 削除 ---
+const textDelete = (index) => {
+  if (window.confirm("本当に削除してもよろしいですか?")) {
+    todoList.splice(index, 1);
+
+    renderTodos();
+  }
+};
+
 const createDeleteButton = (index) => {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "削除";
@@ -54,16 +66,12 @@ const createDeleteButton = (index) => {
   deleteButton.dataset.index = index;
 
   deleteButton.addEventListener("click", () => {
-    if (window.confirm("本当に削除してもよろしいですか?")) {
-      todoList.splice(index, 1);
-
-      renderTodos();
-    }
+    textDelete(index);
   });
   return deleteButton;
 };
 
-// --- チェックボックスの作成 ---
+// --- チェックボックス ---
 const createCheckbox = (todo, index) => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
