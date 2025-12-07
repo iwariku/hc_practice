@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>js_kimetsu_list</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="filterOptions">
+      <label
+        ><input
+          type="radio"
+          name="charFilter"
+          value="all.json"
+          checked
+        />全キャラクター</label
+      >
+      <label
+        ><input
+          type="radio"
+          name="charFilter"
+          value="kisatsutai.json"
+        />鬼殺隊</label
+      >
+      <label
+        ><input type="radio" name="charFilter" value="hashira.json" />柱</label
+      >
+      <label><input type="radio" name="charFilter" value="oni.json" />鬼</label>
+    </div>
+    <div id="loadingIndicator"><h1>loading...</h1></div>
+    <ul id="kimetsuList"></ul>
+    <script src="main.js"></script>
+  </body>
+</html>

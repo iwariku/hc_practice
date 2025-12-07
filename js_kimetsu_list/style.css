@@ -1,0 +1,25 @@
+#filterOptions {
+  text-align: center;
+  font-size: 30px;
+}
+
+#kimetsuList {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#kimetsuList li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#loadingIndicator {
+  text-align: center;
+  font-size: 50px;
+}
