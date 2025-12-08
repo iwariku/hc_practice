@@ -2,7 +2,7 @@ const fetchAndDisplay = async (endpointSlug) => {
   const API_BASE_URL = 'https://ihatov08.github.io/kimetsu_api/api/';
   const IMAGE_BASE_URL = 'https://ihatov08.github.io';
 
-  const API_URL = API_BASE_URL + endpointSlug;
+  const API_URL = `${API_BASE_URL}${endpointSlug}.json`;
   const listContainer = document.getElementById('kimetsuList');
   const loadingIndicator = document.getElementById('loadingIndicator');
 
@@ -45,7 +45,7 @@ const init = () => {
     }
   });
 
-  fetchAndDisplay('all.json');
+  fetchAndDisplay('all');
 };
 
 init();
