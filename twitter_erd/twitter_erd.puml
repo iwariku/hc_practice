@@ -80,16 +80,34 @@ entity "notifications" as notifications {
   action_name : VARCHAR(255) <<NOT NULL>>
 }
 
-' DMテーブル
-entity "directmessages" as directmessages {
+' ----------- 今回修正したDMに関数テーブル --------------
+' DMのグループ
+entity "dm_groups" as dm_groups {
   *id : INTEGER <<UNIQ>> <<NOT NULL>>
   --
-  sender_id : INTEGER <<FK(users)>> <<NOT NULL>>
-  recipient_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  name : VARCHAR(255) <<NOT NULL>>
+  create_at : DATETIME
+}
+
+' DMのグループメンバー
+entity "dm_group_members" as dm_group_members {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
+  user_id : INTEGER<<FK(users)>> <<NOT NULL>>
+}
+
+' DMテーブル
+entity "dm_messages" as dm_messages {
+  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  --
+  user_id : INTEGER <<FK(users)>> <<NOT NULL>>
+  dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
   message : TEXT <<NOT NULL>>
   created_at : DATETIME <<NOT NULL>>
   updated_at : DATETIME <<NOT NULL>>
 }
+' ----------------------------------------------
 
 '---------- 1対多 ----------
 'ユーザー1人というレコード 1対多 他のレコード
@@ -114,8 +132,18 @@ entity "directmessages" as directmessages {
 'ユーザー1人が、多数のツイートを持つ
 users ||--o{ tweets
 
-'ユーザー1人が、多数のDMを持つ
-users ||--o{ directmessages
+' --------------------------------------------------------
+
+'ユーザーは複数のグループに所属し、複数のメッセージを書く
+users ||--o{ dm_group_members
+users ||--o{ dm_messages
+
+' グループは複数のメンバーを持ち、複数のメッセージを保持する
+dm_groups ||-o{ dm_group_members
+dm_groups ||--o{ dm_messages
+
+' --------------------------------------------------------
+
 
 'ユーザー1人が、多数のフォロー、フォロワーを持つ
 users ||--o{ follows
