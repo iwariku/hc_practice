@@ -4,6 +4,7 @@ entity "users" as users {
   *id : INTEGER <<UNIQ>> <<NOT NULL>>
   --
   mail : VARCHAR(128) <<UNIQ>> <<NOT NULL>>
+  password : VARCHAR(255) <<NOT NULL>>
   user_name : VARCHAR(255) <<UNIQ>> <<NOT NULL>>
   phone_number : VARCHAR(255) <<UNIQ>> <<NOT NULL>>
   nick_name : VARCHAR(255)
@@ -22,8 +23,8 @@ entity "users" as users {
 entity "follows" as follows {
   *id : INTEGER <<UNIQ>> <<NOT NULL>>
   --
+  following_id : INTEGER <<FK(users)>>
   follower_id : INTEGER <<FK(users)>>
-  followed_id : INTEGER <<FK(users)>>
   created_at : DATETIME <<NOT NULL>>
   updated_at : DATETIME <<NOT NULL>>
 }
@@ -93,8 +94,9 @@ entity "dm_groups" as dm_groups {
 entity "dm_group_members" as dm_group_members {
   *id : INTEGER <<UNIQ>> <<NOT NULL>>
   --
-  dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
   user_id : INTEGER<<FK(users)>> <<NOT NULL>>
+  dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
+  created_at : DATETIME <<NOT NULL>>
 }
 
 ' DMテーブル
