@@ -1,7 +1,7 @@
 @startuml
 ' ユーザーテーブル
 entity "users" as users {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   mail : VARCHAR(128) <<UNIQ>> <<NOT NULL>>
   password : VARCHAR(255) <<NOT NULL>>
@@ -21,7 +21,7 @@ entity "users" as users {
 ' フォロー、フォロワーテーブル
 ' 中間テーブル
 entity "follows" as follows {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   following_id : INTEGER <<FK(users)>>
   follower_id : INTEGER <<FK(users)>>
@@ -31,7 +31,7 @@ entity "follows" as follows {
 
 ' ツイートテーブル
 entity "tweets" as tweets {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
   content : VARCHAR(140) <<NOT NULL>>
@@ -41,7 +41,7 @@ entity "tweets" as tweets {
 
 ' いいねテーブル
 entity "likes" as likes {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
   tweet_id : INTEGER <<KF(tweets)>> <<NOT NULL>>
@@ -51,7 +51,7 @@ entity "likes" as likes {
 
 ' ブックマークテーブル
 entity "bookmarks" as bookmarks {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER <<KF(users)>> <<NOT NULL>>
   tweet_id : INTEGER <<KF(tweets)>> <<NOT NULL>>
@@ -61,7 +61,7 @@ entity "bookmarks" as bookmarks {
 
 ' リツイートテーブル
 entity "retweets" as retweets {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
   tweet_id : INTEGER <<FK(tweets)>> <<NOT NULL>>
@@ -71,7 +71,7 @@ entity "retweets" as retweets {
 
 ' 通知テーブル
 entity "notifications" as notifications {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   sender_id : INTEGER <<FK(users)>> <<NOT NULL>>
   recipient_id : INTEGER <<FK(users)>> <<NOT NULL>>
@@ -84,7 +84,7 @@ entity "notifications" as notifications {
 ' ----------- 今回修正したDMに関数テーブル --------------
 ' DMのグループ
 entity "dm_groups" as dm_groups {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   name : VARCHAR(255) <<NOT NULL>>
   create_at : DATETIME
@@ -92,7 +92,7 @@ entity "dm_groups" as dm_groups {
 
 ' DMのグループメンバー
 entity "dm_group_members" as dm_group_members {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER<<FK(users)>> <<NOT NULL>>
   dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
@@ -101,7 +101,7 @@ entity "dm_group_members" as dm_group_members {
 
 ' DMテーブル
 entity "dm_messages" as dm_messages {
-  *id : INTEGER <<UNIQ>> <<NOT NULL>>
+  *id : INTEGER <<PK>>
   --
   user_id : INTEGER <<FK(users)>> <<NOT NULL>>
   dm_group_id : INTEGER <<FK(dm_groups)>> <<NOT NULL>>
